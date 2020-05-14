@@ -24,11 +24,11 @@ class VarInt:
         for idx in range(len(every_bytes) - 1):
             every_bytes[idx] |= cls.varint_exists_next_byte_bit
 
-        return every_bytes.hex().encode()
+        return bytes(every_bytes)
 
     @classmethod
     def decode(cls, bytes_value: bytes):
-        every_bytes = bytearray.fromhex(bytes_value.decode())
+        every_bytes = bytearray(bytes_value)
 
         for idx in range(len(every_bytes) - 1):
             every_bytes[idx] &= cls.varint_data_byte_bits
