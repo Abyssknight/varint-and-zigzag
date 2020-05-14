@@ -18,20 +18,21 @@ class VarInt:
             if not first_bytes:
                 break
 
-            every_bytes.insert(0, first_bytes)
+            every_bytes.append(first_bytes)
             int_value >>= cls.offset
 
         for idx in range(len(every_bytes) - 1):
             every_bytes[idx] |= cls.varint_exists_next_byte_bit
 
-        return bytes(every_bytes)
+        return every_bytes.hex().encode()
 
     @classmethod
     def decode(cls, bytes_value: bytes):
-        every_bytes = bytearray(bytes_value)
+        every_bytes = bytearray.fromhex(bytes_value.decode())
 
         for idx in range(len(every_bytes) - 1):
             every_bytes[idx] &= cls.varint_data_byte_bits
+        every_bytes.reverse()
 
         return reduce(lambda x, y: x << cls.offset | y, every_bytes)
 
